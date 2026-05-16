@@ -1,29 +1,52 @@
-// Lumière Aesthetics — Plataforma UI
+// Lumière Aesthetics — Plataforma de Formación Estética Profesional
 import React, { useState, useEffect, useRef } from 'react';
 import { motion, AnimatePresence, useInView } from 'framer-motion';
 import './App.css';
 
+const WA_NUMBER = '573000000000';
+const WA_MSG = encodeURIComponent('Hola, me interesa recibir información sobre los cursos y servicios profesionales.');
+const WA_LINK = `https://wa.me/${WA_NUMBER}?text=${WA_MSG}`;
+
+// ─── WhatsApp FAB ─────────────────────────────────────────────────────────────
+function WhatsAppFAB() {
+  return (
+    <a
+      href={WA_LINK}
+      className="wa-fab"
+      target="_blank"
+      rel="noopener noreferrer"
+      aria-label="Contactar por WhatsApp"
+    >
+      <svg viewBox="0 0 24 24" fill="currentColor" width="26" height="26">
+        <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/>
+      </svg>
+      <span>WhatsApp</span>
+    </a>
+  );
+}
+
 // ─── Navbar ───────────────────────────────────────────────────────────────────
-function Navbar({ activeSection }) {
+function Navbar({ active }) {
   const [scrolled, setScrolled] = useState(false);
-  const [menuOpen, setMenuOpen] = useState(false);
+  const [open, setOpen] = useState(false);
 
   useEffect(() => {
-    const onScroll = () => setScrolled(window.scrollY > 60);
-    window.addEventListener('scroll', onScroll, { passive: true });
-    return () => window.removeEventListener('scroll', onScroll);
+    const fn = () => setScrolled(window.scrollY > 60);
+    window.addEventListener('scroll', fn, { passive: true });
+    return () => window.removeEventListener('scroll', fn);
   }, []);
 
-  const scrollTo = (id) => {
+  const go = (id) => {
     document.getElementById(id)?.scrollIntoView({ behavior: 'smooth' });
-    setMenuOpen(false);
+    setOpen(false);
   };
 
   const links = [
-    { id: 'servicios', label: 'Servicios' },
-    { id: 'formacion', label: 'Formación' },
-    { id: 'nosotros', label: 'Nosotros' },
-    { id: 'contacto', label: 'Contacto' },
+    { id: 'academia',       label: 'Academia' },
+    { id: 'modalidades',    label: 'Modalidades' },
+    { id: 'servicios',      label: 'Servicios' },
+    { id: 'la-guaira',      label: 'La Guaira' },
+    { id: 'contacto',       label: 'Contacto' },
   ];
 
   return (
@@ -34,89 +57,78 @@ function Navbar({ activeSection }) {
       transition={{ duration: 0.6, ease: 'easeOut' }}
     >
       <div className="navbar__inner">
-        <button className="navbar__logo" onClick={() => scrollTo('inicio')}>
+        <button className="navbar__logo" onClick={() => go('inicio')}>
           <span className="navbar__logo-main">LUMIÈRE</span>
           <span className="navbar__logo-sub">AESTHETICS</span>
         </button>
 
-        <ul className={`navbar__links${menuOpen ? ' navbar__links--open' : ''}`}>
+        <ul className={`navbar__links${open ? ' navbar__links--open' : ''}`}>
           {links.map(({ id, label }) => (
             <li key={id}>
               <button
-                className={`navbar__link${activeSection === id ? ' navbar__link--active' : ''}`}
-                onClick={() => scrollTo(id)}
-              >
-                {label}
-              </button>
+                className={`navbar__link${active === id ? ' navbar__link--active' : ''}`}
+                onClick={() => go(id)}
+              >{label}</button>
             </li>
           ))}
           <li>
-            <button className="btn-primary navbar__cta" onClick={() => scrollTo('contacto')}>
-              Reservar Cita
-            </button>
+            <a href={WA_LINK} target="_blank" rel="noopener noreferrer"
+               className="btn-primary navbar__cta">
+              Reservar por WhatsApp
+            </a>
           </li>
         </ul>
 
-        <button
-          className="navbar__hamburger"
-          onClick={() => setMenuOpen(!menuOpen)}
-          aria-label="Abrir menú"
-        >
+        <button className="navbar__hamburger" onClick={() => setOpen(!open)} aria-label="Menú">
           <span /><span /><span />
         </button>
       </div>
-
-      {menuOpen && (
-        <div className="navbar__overlay" onClick={() => setMenuOpen(false)} />
-      )}
+      {open && <div className="navbar__overlay" onClick={() => setOpen(false)} />}
     </motion.nav>
   );
 }
 
 // ─── Hero ─────────────────────────────────────────────────────────────────────
 function Hero() {
-  const scrollTo = (id) =>
-    document.getElementById(id)?.scrollIntoView({ behavior: 'smooth' });
-
+  const go = (id) => document.getElementById(id)?.scrollIntoView({ behavior: 'smooth' });
   return (
     <section id="inicio" className="hero">
       <div className="hero__bg">
         <div className="hero__bg-gradient" />
-        <div className="hero__bg-blobs">
-          <div className="hero__blob hero__blob--1" />
-          <div className="hero__blob hero__blob--2" />
-        </div>
+        <div className="hero__blob hero__blob--1" />
+        <div className="hero__blob hero__blob--2" />
       </div>
 
       <div className="hero__content">
-        {/* Left column — copy */}
         <motion.div
           className="hero__text"
           initial={{ opacity: 0, x: -50 }}
           animate={{ opacity: 1, x: 0 }}
           transition={{ duration: 0.9, delay: 0.15, ease: 'easeOut' }}
         >
-          <p className="hero__eyebrow">Clínica &amp; Academia</p>
+          <p className="hero__eyebrow">Academia & Clínica Estética Profesional</p>
           <h1 className="hero__headline">
-            Arte y Ciencia<br />
-            <em>al servicio</em><br />
-            de tu belleza.
+            Transformando Vidas<br />
+            <em>a través del Arte</em><br />
+            y la Estética Profesional.
           </h1>
           <p className="hero__body">
-            Formación estética de alta gama y tratamientos clínicos con estándares
-            internacionales. Confianza, excelencia y resultados que perduran.
+            Formación especializada en micropigmentación paramédica, servicios clínicos de alta gama
+            y acompañamiento para emprender en Venezuela. Certifícate con aval internacional.
           </p>
           <div className="hero__actions">
-            <button className="btn-primary" onClick={() => scrollTo('servicios')}>
-              Explorar Servicios
-            </button>
-            <button className="btn-ghost" onClick={() => scrollTo('formacion')}>
-              Ver Programas
+            <a href={WA_LINK} target="_blank" rel="noopener noreferrer" className="btn-primary">
+              <svg viewBox="0 0 24 24" fill="currentColor" width="18" height="18">
+                <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/>
+              </svg>
+              Reservar Cita por WhatsApp
+            </a>
+            <button className="btn-ghost" onClick={() => go('academia')}>
+              Ver Cursos
             </button>
           </div>
         </motion.div>
 
-        {/* Right column — visual card */}
         <motion.div
           className="hero__visual"
           initial={{ opacity: 0, scale: 0.92 }}
@@ -125,8 +137,8 @@ function Hero() {
         >
           <div className="hero__card">
             <div className="hero__card-badge">
-              <span className="hero__card-badge-num">12+</span>
-              <span className="hero__card-badge-text">años de experiencia</span>
+              <span className="hero__card-badge-num">+500</span>
+              <span className="hero__card-badge-text">alumnas certificadas</span>
             </div>
             <div className="hero__card-circles">
               <div className="hero__circle hero__circle--1" />
@@ -140,9 +152,8 @@ function Hero() {
               Certificación Internacional
             </div>
           </div>
-
           <div className="hero__mini-stats">
-            {[{ n: '3.000+', l: 'Pacientes' }, { n: '98%', l: 'Satisfacción' }].map(({ n, l }) => (
+            {[{ n: '12+', l: 'Años' }, { n: '98%', l: 'Satisfacción' }].map(({ n, l }) => (
               <div key={n} className="hero__mini-stat">
                 <span className="hero__mini-stat-num">{n}</span>
                 <span className="hero__mini-stat-label">{l}</span>
@@ -154,7 +165,7 @@ function Hero() {
 
       <motion.button
         className="hero__scroll-cue"
-        onClick={() => scrollTo('servicios')}
+        onClick={() => go('academia')}
         initial={{ opacity: 0 }}
         animate={{ opacity: 1, y: [0, 8, 0] }}
         transition={{
@@ -163,20 +174,18 @@ function Hero() {
         }}
       >
         <div className="hero__scroll-line" />
-        <span>Desplázate</span>
+        <span>Explora</span>
       </motion.button>
     </section>
   );
 }
 
-// ─── Section Header ────────────────────────────────────────────────────────────
+// ─── SectionHeader ─────────────────────────────────────────────────────────────
 function SectionHeader({ eyebrow, title, subtitle }) {
   const ref = useRef(null);
   const inView = useInView(ref, { once: true, margin: '-80px' });
   return (
-    <motion.div
-      ref={ref}
-      className="section-header"
+    <motion.div ref={ref} className="section-header"
       initial={{ opacity: 0, y: 36 }}
       animate={inView ? { opacity: 1, y: 0 } : {}}
       transition={{ duration: 0.7, ease: 'easeOut' }}
@@ -193,72 +202,74 @@ function SectionHeader({ eyebrow, title, subtitle }) {
   );
 }
 
-// ─── Services ─────────────────────────────────────────────────────────────────
-const SERVICES = [
+// ─── Academia ─────────────────────────────────────────────────────────────────
+const COURSES = [
   {
-    icon: '◈',
-    title: 'Toxina Botulínica',
-    desc: 'Suavizado de líneas de expresión con resultados naturales y duraderos. Protocolo premium con productos certificados por la FDA.',
-    tag: 'Clínico',
+    num: '01',
+    title: 'Micropigmentación de Cejas',
+    sub: 'Técnicas Avanzadas',
+    desc: 'Domina las técnicas de Microblading, Ombré, Powder Brow y combinadas. Aprende diseño de cejas según morfología facial, mezcla de pigmentos y protocolos de bioseguridad internacionales.',
+    tags: ['Microblading', 'Ombré Brow', 'Powder Brow', 'Diseño facial'],
+    duration: '40 h',
+    level: 'Básico → Avanzado',
   },
   {
-    icon: '◇',
-    title: 'Rellenos Dérmicos',
-    desc: 'Restauración del volumen facial con ácido hialurónico de última generación, adaptado a la anatomía única de cada paciente.',
-    tag: 'Clínico',
+    num: '02',
+    title: 'Remoción de Verrugas',
+    sub: 'Protocolos de Bioseguridad',
+    desc: 'Técnicas de electrocauterización y remoción con plasma pen. Diagnóstico diferencial, cuidados post-procedimiento, manejo de equipos de alta frecuencia y normativas de bioseguridad vigentes.',
+    tags: ['Electrocauterización', 'Plasma Pen', 'Bioseguridad', 'Post-procedimiento'],
+    duration: '20 h',
+    level: 'Intermedio',
   },
   {
-    icon: '◈',
-    title: 'Bioestimuladores',
-    desc: 'Estimulación de colágeno para una piel más firme y luminosa desde el interior, con resultados progresivos y duraderos.',
-    tag: 'Clínico',
-  },
-  {
-    icon: '◇',
-    title: 'Peelings Médicos',
-    desc: 'Renovación celular profunda con ácidos controlados. Protocolos personalizados para cada biotipo y necesidad cutánea.',
-    tag: 'Clínico',
-  },
-  {
-    icon: '◈',
-    title: 'Hilos Tensores PDO',
-    desc: 'Lifting sin cirugía para redefinir el contorno facial. Técnica mínimamente invasiva, sin tiempo de recuperación significativo.',
-    tag: 'Avanzado',
-  },
-  {
-    icon: '◇',
-    title: 'Láser & Radiofrecuencia',
-    desc: 'Tecnología de última generación para rejuvenecimiento, corrección de manchas y remodelación corporal no invasiva.',
-    tag: 'Tecnología',
+    num: '03',
+    title: 'Reconstrucción de Areola / Pezón',
+    sub: 'Especialización Oncológica & Post-Cirugía',
+    desc: 'Micropigmentación paramédica para la restauración de la areola y el pezón en pacientes post-mastectomía. Un procedimiento que devuelve la autoestima y completa el proceso de recuperación oncológica.',
+    tags: ['Paramédica', 'Post-mastectomía', 'Oncológica', 'Restauración'],
+    duration: '30 h',
+    level: 'Avanzado',
+    featured: true,
   },
 ];
 
-function Services() {
+function Academia() {
   const ref = useRef(null);
   const inView = useInView(ref, { once: true, margin: '-60px' });
   return (
-    <section id="servicios" className="section section--pearl">
+    <section id="academia" className="section section--ivory">
       <SectionHeader
-        eyebrow="Medicina Estética"
-        title="Servicios Clínicos"
-        subtitle="Cada tratamiento es diseñado a medida, con los más altos estándares médicos y resultados que hablan por sí solos."
+        eyebrow="Academia de Formación"
+        title="Cursos Especializados"
+        subtitle="Programas diseñados para profesionales que buscan la excelencia técnica con certificación internacional."
       />
-      <div ref={ref} className="services-grid">
-        {SERVICES.map(({ icon, title, desc, tag }, i) => (
+      <div ref={ref} className="academy-grid">
+        {COURSES.map(({ num, title, sub, desc, tags, duration, level, featured }, i) => (
           <motion.article
-            key={title}
-            className="service-card"
-            initial={{ opacity: 0, y: 48 }}
+            key={num}
+            className={`course-card${featured ? ' course-card--featured' : ''}`}
+            initial={{ opacity: 0, y: 52 }}
             animate={inView ? { opacity: 1, y: 0 } : {}}
-            transition={{ duration: 0.6, delay: i * 0.09, ease: 'easeOut' }}
+            transition={{ duration: 0.65, delay: i * 0.13, ease: 'easeOut' }}
           >
-            <div className="service-card__top">
-              <span className="service-card__icon">{icon}</span>
-              <span className="service-card__tag">{tag}</span>
+            <div className="course-card__num">{num}</div>
+            <div className="course-card__head">
+              <h3 className="course-card__title">{title}</h3>
+              <p className="course-card__sub">{sub}</p>
             </div>
-            <h3 className="service-card__title">{title}</h3>
-            <p className="service-card__desc">{desc}</p>
-            <button className="service-card__link">Más información →</button>
+            <p className="course-card__desc">{desc}</p>
+            <div className="course-card__tags">
+              {tags.map(t => <span key={t} className="course-card__tag">{t}</span>)}
+            </div>
+            <div className="course-card__meta">
+              <span>⏱ {duration}</span>
+              <span>◈ {level}</span>
+            </div>
+            <a href={WA_LINK} target="_blank" rel="noopener noreferrer"
+               className={featured ? 'btn-primary btn-full' : 'btn-outline btn-full'}>
+              Solicitar Información
+            </a>
           </motion.article>
         ))}
       </div>
@@ -266,223 +277,176 @@ function Services() {
   );
 }
 
-// ─── Stats Strip ──────────────────────────────────────────────────────────────
-const STATS = [
-  { num: '12+', label: 'Años de Experiencia' },
-  { num: '3.000+', label: 'Pacientes Atendidos' },
-  { num: '98%', label: 'Índice de Satisfacción' },
-  { num: '500+', label: 'Profesionales Formados' },
-];
-
-function StatsStrip() {
-  const ref = useRef(null);
-  const inView = useInView(ref, { once: true, margin: '-40px' });
-  return (
-    <div className="stats-strip" ref={ref}>
-      {STATS.map(({ num, label }, i) => (
-        <motion.div
-          key={label}
-          className="stats-strip__item"
-          initial={{ opacity: 0, y: 24 }}
-          animate={inView ? { opacity: 1, y: 0 } : {}}
-          transition={{ duration: 0.55, delay: i * 0.1 }}
-        >
-          <span className="stats-strip__num">{num}</span>
-          <span className="stats-strip__label">{label}</span>
-        </motion.div>
-      ))}
-    </div>
-  );
-}
-
-// ─── Training ─────────────────────────────────────────────────────────────────
-const PROGRAMS = [
-  {
-    level: 'Esencial',
-    title: 'Fundamentos en Estética Clínica',
-    hours: '80 h',
-    modules: 6,
-    desc: 'Base sólida en anatomía, fisiología de la piel y técnicas esenciales. Ideal para profesionales que inician su carrera en medicina estética.',
-    highlights: ['Anatomía facial aplicada', 'Introducción a la toxina botulínica', 'Gestión y comunicación con pacientes', 'Protocolo de seguridad clínica'],
-  },
-  {
-    level: 'Avanzado',
-    title: 'Especialización en Medicina Regenerativa',
-    hours: '160 h',
-    modules: 12,
-    desc: 'Profundización en bioestimuladores, mesoterapia y técnicas regenerativas, con práctica supervisada en pacientes reales.',
-    highlights: ['Bioestimuladores avanzados', 'Hilos tensores PDO', 'Mesoterapia facial y corporal', 'Casos clínicos en vivo'],
-    featured: true,
-  },
-  {
-    level: 'Máster',
-    title: 'Máster en Estética Integral de Alta Gama',
-    hours: '300 h',
-    modules: 20,
-    desc: 'Programa completo que abarca todos los tratamientos estéticos modernos, con certificación de aval internacional y mentoría personalizada.',
-    highlights: ['Láser y tecnología avanzada', 'Cirugía menor estética', 'Gestión y apertura de clínica', 'Mentoría 1:1 con especialistas'],
-  },
-];
-
-function Training() {
+// ─── Modalidades ──────────────────────────────────────────────────────────────
+function Modalidades() {
   const ref = useRef(null);
   const inView = useInView(ref, { once: true, margin: '-60px' });
   return (
-    <section id="formacion" className="section section--ivory">
+    <section id="modalidades" className="section section--pearl">
       <SectionHeader
-        eyebrow="Academia Lumière"
-        title="Programas de Formación"
-        subtitle="Desarrolla tu excelencia profesional con programas diseñados por expertos líderes de la industria estética."
+        eyebrow="Modalidades de Estudio"
+        title="Aprende a tu ritmo,<br/><em>donde estés.</em>"
+        subtitle="Dos formatos diseñados para adaptarse a tu estilo de vida sin sacrificar la calidad del aprendizaje."
       />
-      <div ref={ref} className="programs-grid">
-        {PROGRAMS.map(({ level, title, hours, modules, desc, highlights, featured }, i) => (
-          <motion.article
+      <div ref={ref} className="modalities-grid">
+        {[
+          {
+            icon: '▶',
+            title: 'Cursos Pre-grabados',
+            badge: 'Acceso Inmediato',
+            desc: 'Contenido de alta calidad disponible 24/7. Accede desde cualquier dispositivo, a tu propio ritmo, con soporte y material descargable incluido.',
+            perks: [
+              'Acceso de por vida al contenido',
+              'Material descargable en PDF',
+              'Comunidad privada de alumnas',
+              'Certificado digital al finalizar',
+              'Actualizaciones sin costo adicional',
+            ],
+            cta: 'Ver Cursos Disponibles',
+          },
+          {
+            icon: '◉',
+            title: 'Mentorías en Vivo',
+            badge: 'Vía Streaming',
+            desc: 'Sesiones personalizadas en tiempo real con feedback directo. Ideal para resolver dudas técnicas, practicar casos clínicos y acelerar tu aprendizaje.',
+            perks: [
+              'Sesiones grupales e individuales',
+              'Transmisión en vivo vía streaming',
+              'Práctica con modelos reales',
+              'Corrección de técnica en directo',
+              'Grabación de cada sesión',
+            ],
+            cta: 'Reservar Mentoría',
+            featured: true,
+          },
+        ].map(({ icon, title, badge, desc, perks, cta, featured }, i) => (
+          <motion.div
             key={title}
-            className={`program-card${featured ? ' program-card--featured' : ''}`}
-            initial={{ opacity: 0, y: 56 }}
+            className={`modality-card${featured ? ' modality-card--featured' : ''}`}
+            initial={{ opacity: 0, y: 44 }}
             animate={inView ? { opacity: 1, y: 0 } : {}}
-            transition={{ duration: 0.7, delay: i * 0.14, ease: 'easeOut' }}
+            transition={{ duration: 0.7, delay: i * 0.15 }}
           >
-            {featured && <div className="program-card__ribbon">Más popular</div>}
-            <div className="program-card__level">{level}</div>
-            <h3 className="program-card__title">{title}</h3>
-            <div className="program-card__meta">
-              <span>⏱ {hours}</span>
-              <span>📋 {modules} módulos</span>
+            <div className="modality-card__top">
+              <span className="modality-card__icon">{icon}</span>
+              <span className="modality-card__badge">{badge}</span>
             </div>
-            <p className="program-card__desc">{desc}</p>
-            <ul className="program-card__highlights">
-              {highlights.map((h) => (
-                <li key={h}>
+            <h3 className="modality-card__title">{title}</h3>
+            <p className="modality-card__desc">{desc}</p>
+            <ul className="modality-card__perks">
+              {perks.map(p => (
+                <li key={p}>
                   <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5">
                     <polyline points="20 6 9 17 4 12" />
                   </svg>
-                  {h}
+                  {p}
                 </li>
               ))}
             </ul>
-            <button className={featured ? 'btn-primary btn-full' : 'btn-outline btn-full'}>
-              Solicitar Información
-            </button>
-          </motion.article>
+            <a href={WA_LINK} target="_blank" rel="noopener noreferrer"
+               className={featured ? 'btn-primary btn-full' : 'btn-outline btn-full'}>
+              {cta}
+            </a>
+          </motion.div>
         ))}
       </div>
     </section>
   );
 }
 
-// ─── About ────────────────────────────────────────────────────────────────────
-function About() {
+// ─── Lead Magnet Banner ───────────────────────────────────────────────────────
+function LeadMagnet() {
   const ref = useRef(null);
-  const inView = useInView(ref, { once: true, margin: '-80px' });
-  const scrollTo = (id) => document.getElementById(id)?.scrollIntoView({ behavior: 'smooth' });
-
+  const inView = useInView(ref, { once: true, margin: '-40px' });
   return (
-    <section id="nosotros" className="section section--pearl">
-      <div className="about" ref={ref}>
-        <motion.div
-          className="about__visual"
-          initial={{ opacity: 0, x: -50 }}
-          animate={inView ? { opacity: 1, x: 0 } : {}}
-          transition={{ duration: 0.8, ease: 'easeOut' }}
-        >
-          <div className="about__img-frame">
-            <div className="about__img-placeholder" />
-            <div className="about__img-accent" />
-          </div>
-          <div className="about__cert-badge">
-            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5">
-              <circle cx="12" cy="8" r="6" />
-              <path d="M15.477 12.89L17 22l-5-3-5 3 1.523-9.11" />
-            </svg>
-            <div>
-              <span className="about__cert-title">Certificación ISO 9001</span>
-              <span className="about__cert-sub">Calidad en Procesos Clínicos</span>
-            </div>
-          </div>
-        </motion.div>
-
-        <motion.div
-          className="about__text"
-          initial={{ opacity: 0, x: 50 }}
-          animate={inView ? { opacity: 1, x: 0 } : {}}
-          transition={{ duration: 0.8, delay: 0.12, ease: 'easeOut' }}
-        >
-          <p className="section-eyebrow">Nuestra Historia</p>
-          <h2 className="section-title section-title--left">
-            Donde la medicina<br /><em>se convierte en arte.</em>
-          </h2>
-          <p className="about__body">
-            Lumière Aesthetics nació de la convicción de que la belleza auténtica emerge de la
-            intersección entre ciencia rigurosa y sensibilidad artística. Somos una clínica y
-            academia de referencia, comprometidos con la excelencia en cada procedimiento y
-            en cada programa de formación.
+    <motion.section
+      ref={ref}
+      className="lead-magnet"
+      initial={{ opacity: 0, y: 32 }}
+      animate={inView ? { opacity: 1, y: 0 } : {}}
+      transition={{ duration: 0.7 }}
+    >
+      <div className="lead-magnet__inner">
+        <div className="lead-magnet__badge">GRATIS</div>
+        <div className="lead-magnet__text">
+          <p className="lead-magnet__eyebrow">Masterclass de Regalo al Inscribirte</p>
+          <h2 className="lead-magnet__title">De Artista a Empresaria</h2>
+          <p className="lead-magnet__desc">
+            Marketing y Marca Personal para Esteticistas: cómo crear contenido para Instagram
+            y TikTok que convierta seguidores en pacientes. Acceso inmediato al inscribirte
+            en cualquier curso.
           </p>
-          <p className="about__body">
-            Nuestro equipo está compuesto por médicos especialistas con formación internacional,
-            quienes combinan técnica impecable con un profundo respeto por la naturalidad y la
-            individualidad de cada paciente.
-          </p>
-          <div className="about__values">
-            {['Ética médica', 'Resultados naturales', 'Formación continua', 'Atención personalizada'].map((v) => (
-              <div key={v} className="about__value">
-                <span className="about__value-dot" />
-                {v}
-              </div>
-            ))}
-          </div>
-          <button className="btn-primary" onClick={() => scrollTo('contacto')}>
-            Conoce al Equipo
-          </button>
-        </motion.div>
+        </div>
+        <a href={WA_LINK} target="_blank" rel="noopener noreferrer"
+           className="btn-primary lead-magnet__cta">
+          Quiero mi Masterclass Gratis
+        </a>
       </div>
-    </section>
+    </motion.section>
   );
 }
 
-// ─── Testimonials ─────────────────────────────────────────────────────────────
-const TESTIMONIALS = [
-  {
-    quote: 'La formación en Lumière transformó completamente mi práctica clínica. Los módulos prácticos y la mentoría personalizada me dieron la confianza para ofrecer resultados excepcionales.',
-    name: 'Dra. Valentina Ríos',
-    role: 'Médica Estética — Bogotá',
-  },
-  {
-    quote: 'Como paciente, lo que más valoro es la naturalidad de los resultados. El equipo se toma el tiempo de entender lo que realmente quieres y trabaja con una precisión extraordinaria.',
-    name: 'Sofía Mendez',
-    role: 'Paciente — Medellín',
-  },
-  {
-    quote: 'El Máster me dio la certificación y el respaldo que necesitaba para abrir mi propia clínica. La calidad del programa y el acompañamiento del equipo son incomparables.',
-    name: 'Dr. Andrés Castillo',
-    role: 'Director Clínico — Cali',
-  },
+// ─── Servicios Clínicos ───────────────────────────────────────────────────────
+const CLINICAL = [
+  { title: 'Micropigmentación de Cejas', cat: 'Paramédica' },
+  { title: 'Diseño y Perfilado de Labios', cat: 'Facial' },
+  { title: 'Remoción de Verrugas', cat: 'Clínico' },
+  { title: 'Reconstrucción de Areola / Pezón', cat: 'Oncológica' },
+  { title: 'Limpieza Facial Profunda', cat: 'Facial' },
+  { title: 'Hidratación y Revitalización', cat: 'Facial' },
 ];
 
-function Testimonials() {
+const PALETTE_BEFORE = [
+  'linear-gradient(135deg,#E2CABB 0%,#BFA08A 100%)',
+  'linear-gradient(135deg,#EFE3D8 0%,#D4B5A0 100%)',
+  'linear-gradient(135deg,#F2EDE7 0%,#DEB9A8 100%)',
+  'linear-gradient(135deg,#D4B5A0 0%,#C9A48A 100%)',
+  'linear-gradient(135deg,#EFE3D8 0%,#D4B5A0 100%)',
+  'linear-gradient(135deg,#E2CABB 0%,#BFA08A 100%)',
+];
+const PALETTE_AFTER = [
+  'linear-gradient(135deg,#C9A96E 0%,#B8965A 100%)',
+  'linear-gradient(135deg,#D4AF74 0%,#C9A96E 100%)',
+  'linear-gradient(135deg,#E8D5A3 0%,#D4AF74 100%)',
+  'linear-gradient(135deg,#C9A96E 0%,#A68B5B 100%)',
+  'linear-gradient(135deg,#D4AF74 0%,#C9A96E 100%)',
+  'linear-gradient(135deg,#C9A96E 0%,#B8965A 100%)',
+];
+
+function Servicios() {
   const ref = useRef(null);
   const inView = useInView(ref, { once: true, margin: '-60px' });
   return (
-    <section className="section section--gold-soft">
-      <SectionHeader eyebrow="Testimonios" title="Lo que dicen de nosotros" />
-      <div ref={ref} className="testimonials-grid">
-        {TESTIMONIALS.map(({ quote, name, role }, i) => (
+    <section id="servicios" className="section section--ivory">
+      <SectionHeader
+        eyebrow="Servicios Clínicos"
+        title="Tratamientos en Cabina"
+        subtitle="Procedimientos profesionales realizados con los más altos estándares de bioseguridad y técnica."
+      />
+      <div ref={ref} className="clinical-grid">
+        {CLINICAL.map(({ title, cat }, i) => (
           <motion.article
-            key={name}
-            className="testimonial-card"
+            key={title}
+            className="clinical-card"
             initial={{ opacity: 0, y: 40 }}
             animate={inView ? { opacity: 1, y: 0 } : {}}
-            transition={{ duration: 0.6, delay: i * 0.13 }}
+            transition={{ duration: 0.6, delay: i * 0.09 }}
           >
-            <div className="testimonial-card__quote-mark">&ldquo;</div>
-            <p className="testimonial-card__quote">{quote}</p>
-            <div className="testimonial-card__author">
-              <div className="testimonial-card__avatar">{name.charAt(0)}</div>
-              <div>
-                <span className="testimonial-card__name">{name}</span>
-                <span className="testimonial-card__role">{role}</span>
+            <span className="clinical-card__cat">{cat}</span>
+            <div className="before-after">
+              <div className="before-after__col">
+                <div className="before-after__img" style={{ background: PALETTE_BEFORE[i] }} />
+                <span>Antes</span>
+              </div>
+              <div className="before-after__divider">→</div>
+              <div className="before-after__col">
+                <div className="before-after__img" style={{ background: PALETTE_AFTER[i] }} />
+                <span>Después</span>
               </div>
             </div>
+            <h3 className="clinical-card__title">{title}</h3>
+            <a href={WA_LINK} target="_blank" rel="noopener noreferrer"
+               className="clinical-card__link">Agendar Valoración →</a>
           </motion.article>
         ))}
       </div>
@@ -490,30 +454,107 @@ function Testimonials() {
   );
 }
 
-// ─── Gallery ─────────────────────────────────────────────────────────────────
-function Gallery() {
+// ─── La Guaira ────────────────────────────────────────────────────────────────
+function LaGuaira() {
   const ref = useRef(null);
-  const inView = useInView(ref, { once: true });
-  const palettes = [
-    'linear-gradient(135deg,#F2EDE7 0%,#DEB9A8 100%)',
-    'linear-gradient(145deg,#D4B5A0 0%,#BFA08A 100%)',
-    'linear-gradient(135deg,#C9A96E 0%,#A68B5B 100%)',
-    'linear-gradient(145deg,#EFE3D8 0%,#D4B5A0 100%)',
-    'linear-gradient(135deg,#E8D5A3 0%,#C9A48A 100%)',
+  const inView = useInView(ref, { once: true, margin: '-60px' });
+  const pillars = [
+    {
+      icon: '◈',
+      title: 'Permisología Local',
+      desc: 'Guía paso a paso para registrar tu estudio ante el SENIAT, INCES y organismos de salud del estado La Guaira. Documentos y requisitos actualizados.',
+    },
+    {
+      icon: '◇',
+      title: 'Networking Regional',
+      desc: 'Conecta con proveedores locales de insumos, pigmentos y equipos. Alianzas estratégicas con distribuidores en Vargas y Caracas.',
+    },
+    {
+      icon: '◈',
+      title: 'Logística Resiliente',
+      desc: 'Planifica tu negocio ante la realidad venezolana: gestión de planta eléctrica, reservorios de agua, pagos digitales y atención con y sin conectividad.',
+    },
+    {
+      icon: '◇',
+      title: 'Plan de Negocios Regional',
+      desc: 'Estrategia financiera adaptada al mercado de La Guaira: fijación de precios, análisis de competencia local y proyección de ingresos en divisas.',
+    },
   ];
   return (
-    <section className="section section--ivory">
-      <SectionHeader eyebrow="Instalaciones" title="Nuestro Espacio" />
-      <div ref={ref} className="gallery-strip">
-        {palettes.map((bg, i) => (
+    <section id="la-guaira" className="section section--guaira">
+      <div className="la-guaira" ref={ref}>
+        <motion.div
+          className="la-guaira__text"
+          initial={{ opacity: 0, x: -44 }}
+          animate={inView ? { opacity: 1, x: 0 } : {}}
+          transition={{ duration: 0.75 }}
+        >
+          <p className="section-eyebrow" style={{ color: 'var(--gold-300)' }}>Emprendimiento Local</p>
+          <h2 className="section-title section-title--left" style={{ color: 'var(--pearl)' }}>
+            Emprende en<br /><em style={{ color: 'var(--gold-300)' }}>La Guaira</em>
+          </h2>
+          <p className="la-guaira__body">
+            Sabemos cómo funciona Venezuela. Por eso este módulo está diseñado específicamente
+            para quien quiere abrir su propio estudio en el estado La Guaira con información
+            real, práctica y actualizada.
+          </p>
+          <a href={WA_LINK} target="_blank" rel="noopener noreferrer"
+             className="btn-primary" style={{ background: 'var(--gold-400)', color: 'var(--text-900)' }}>
+            Quiero Emprender
+          </a>
+        </motion.div>
+        <motion.div
+          className="la-guaira__pillars"
+          initial={{ opacity: 0, x: 44 }}
+          animate={inView ? { opacity: 1, x: 0 } : {}}
+          transition={{ duration: 0.75, delay: 0.12 }}
+        >
+          {pillars.map(({ icon, title, desc }) => (
+            <div key={title} className="guaira-pillar">
+              <span className="guaira-pillar__icon">{icon}</span>
+              <div>
+                <h4 className="guaira-pillar__title">{title}</h4>
+                <p className="guaira-pillar__desc">{desc}</p>
+              </div>
+            </div>
+          ))}
+        </motion.div>
+      </div>
+    </section>
+  );
+}
+
+// ─── Certificaciones ──────────────────────────────────────────────────────────
+const CERTS = [
+  { icon: '🏅', title: 'Aval Internacional', sub: 'Reconocimiento en 12 países' },
+  { icon: '📋', title: 'ISO 9001', sub: 'Calidad en procesos clínicos' },
+  { icon: '🎓', title: 'INCES Avalado', sub: 'Formación técnica reconocida' },
+  { icon: '🔬', title: 'Bioseguridad Nivel III', sub: 'Protocolos internacionales' },
+];
+
+function Certificaciones() {
+  const ref = useRef(null);
+  const inView = useInView(ref, { once: true, margin: '-60px' });
+  return (
+    <section className="section section--pearl">
+      <SectionHeader
+        eyebrow="Confianza & Respaldo"
+        title="Certificaciones y Avales"
+        subtitle="Nuestra formación está respaldada por organismos internacionales que garantizan la calidad y el reconocimiento de tu certificado."
+      />
+      <div ref={ref} className="certs-grid">
+        {CERTS.map(({ icon, title, sub }, i) => (
           <motion.div
-            key={i}
-            className="gallery-item"
-            style={{ background: bg }}
-            initial={{ opacity: 0, scale: 0.92 }}
-            animate={inView ? { opacity: 1, scale: 1 } : {}}
-            transition={{ duration: 0.55, delay: i * 0.08 }}
-          />
+            key={title}
+            className="cert-card"
+            initial={{ opacity: 0, y: 32 }}
+            animate={inView ? { opacity: 1, y: 0 } : {}}
+            transition={{ duration: 0.55, delay: i * 0.1 }}
+          >
+            <span className="cert-card__icon">{icon}</span>
+            <h4 className="cert-card__title">{title}</h4>
+            <p className="cert-card__sub">{sub}</p>
+          </motion.div>
         ))}
       </div>
     </section>
@@ -522,16 +563,10 @@ function Gallery() {
 
 // ─── Contact ──────────────────────────────────────────────────────────────────
 function Contact() {
-  const [form, setForm] = useState({ name: '', email: '', phone: '', service: '', message: '' });
-  const [sent, setSent] = useState(false);
   const ref = useRef(null);
   const inView = useInView(ref, { once: true, margin: '-60px' });
-
-  const handleChange = (e) => setForm((prev) => ({ ...prev, [e.target.name]: e.target.value }));
-  const handleSubmit = (e) => { e.preventDefault(); setSent(true); };
-
   return (
-    <section id="contacto" className="section section--pearl">
+    <section id="contacto" className="section section--ivory">
       <div className="contact" ref={ref}>
         <motion.div
           className="contact__info"
@@ -539,19 +574,19 @@ function Contact() {
           animate={inView ? { opacity: 1, x: 0 } : {}}
           transition={{ duration: 0.7 }}
         >
-          <p className="section-eyebrow">Contáctanos</p>
+          <p className="section-eyebrow">Estamos aquí</p>
           <h2 className="section-title section-title--left">
             Tu transformación<br /><em>comienza aquí.</em>
           </h2>
           <p className="contact__body">
-            Agenda tu consulta de valoración sin compromiso. Un experto de nuestro equipo
-            te asesorará de forma completamente personalizada.
+            Escríbenos por WhatsApp y recibe una valoración gratuita. Un experto de
+            nuestro equipo te asesorará de forma completamente personalizada.
           </p>
           <div className="contact__details">
             {[
-              { icon: '✉', label: 'hola@lumiereesthetics.com' },
               { icon: '✆', label: '+57 300 000 0000' },
-              { icon: '◎', label: 'Bogotá · Medellín · Cali' },
+              { icon: '✉', label: 'hola@lumiereesthetics.com' },
+              { icon: '◎', label: 'La Guaira · Caracas · Online' },
               { icon: '◷', label: 'Lun – Sáb, 8:00 – 18:00' },
             ].map(({ icon, label }) => (
               <div key={label} className="contact__detail">
@@ -560,6 +595,18 @@ function Contact() {
               </div>
             ))}
           </div>
+          <a
+            href={WA_LINK}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="btn-primary"
+            style={{ marginTop: '28px', width: 'fit-content', display: 'inline-flex' }}
+          >
+            <svg viewBox="0 0 24 24" fill="currentColor" width="18" height="18">
+              <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/>
+            </svg>
+            Agendar Valoración Gratuita vía WhatsApp
+          </a>
         </motion.div>
 
         <motion.div
@@ -568,66 +615,62 @@ function Contact() {
           animate={inView ? { opacity: 1, x: 0 } : {}}
           transition={{ duration: 0.7, delay: 0.14 }}
         >
-          <AnimatePresence mode="wait">
-            {!sent ? (
-              <motion.form
-                key="form"
-                className="contact__form"
-                onSubmit={handleSubmit}
-                exit={{ opacity: 0 }}
-              >
-                <div className="form-row">
-                  <div className="form-group">
-                    <label htmlFor="name">Nombre completo</label>
-                    <input id="name" name="name" type="text" required value={form.name} onChange={handleChange} placeholder="Tu nombre" />
-                  </div>
-                  <div className="form-group">
-                    <label htmlFor="email">Correo electrónico</label>
-                    <input id="email" name="email" type="email" required value={form.email} onChange={handleChange} placeholder="tu@correo.com" />
-                  </div>
-                </div>
-                <div className="form-row">
-                  <div className="form-group">
-                    <label htmlFor="phone">Teléfono</label>
-                    <input id="phone" name="phone" type="tel" value={form.phone} onChange={handleChange} placeholder="+57 300 000 0000" />
-                  </div>
-                  <div className="form-group">
-                    <label htmlFor="service">Servicio de interés</label>
-                    <select id="service" name="service" value={form.service} onChange={handleChange}>
-                      <option value="">Selecciona una opción</option>
-                      <option>Toxina Botulínica</option>
-                      <option>Rellenos Dérmicos</option>
-                      <option>Bioestimuladores</option>
-                      <option>Peelings Médicos</option>
-                      <option>Hilos Tensores PDO</option>
-                      <option>Láser &amp; Radiofrecuencia</option>
-                      <option>Formación Profesional</option>
-                    </select>
-                  </div>
-                </div>
-                <div className="form-group">
-                  <label htmlFor="message">Mensaje</label>
-                  <textarea id="message" name="message" rows={4} value={form.message} onChange={handleChange} placeholder="¿En qué podemos ayudarte?" />
-                </div>
-                <button type="submit" className="btn-primary btn-full">Enviar Mensaje</button>
-              </motion.form>
-            ) : (
-              <motion.div
-                key="thanks"
-                className="contact__thanks"
-                initial={{ opacity: 0, scale: 0.9 }}
-                animate={{ opacity: 1, scale: 1 }}
-              >
-                <div className="contact__thanks-icon">✓</div>
-                <h3>¡Mensaje enviado!</h3>
-                <p>Nuestro equipo se pondrá en contacto contigo dentro de las próximas 24 horas.</p>
-                <button className="btn-outline" onClick={() => setSent(false)}>Enviar otro mensaje</button>
-              </motion.div>
-            )}
-          </AnimatePresence>
+          <ContactForm />
         </motion.div>
       </div>
     </section>
+  );
+}
+
+function ContactForm() {
+  const [form, setForm] = useState({ name: '', email: '', interest: '', message: '' });
+  const [sent, setSent] = useState(false);
+  const change = (e) => setForm(p => ({ ...p, [e.target.name]: e.target.value }));
+  const submit = (e) => { e.preventDefault(); setSent(true); };
+  return (
+    <AnimatePresence mode="wait">
+      {!sent ? (
+        <motion.form key="form" className="contact__form" onSubmit={submit} exit={{ opacity: 0 }}>
+          <div className="form-row">
+            <div className="form-group">
+              <label htmlFor="c-name">Nombre</label>
+              <input id="c-name" name="name" type="text" required value={form.name} onChange={change} placeholder="Tu nombre" />
+            </div>
+            <div className="form-group">
+              <label htmlFor="c-email">Correo</label>
+              <input id="c-email" name="email" type="email" required value={form.email} onChange={change} placeholder="tu@correo.com" />
+            </div>
+          </div>
+          <div className="form-group">
+            <label htmlFor="c-interest">¿Qué te interesa?</label>
+            <select id="c-interest" name="interest" value={form.interest} onChange={change}>
+              <option value="">Selecciona una opción</option>
+              <option>Curso de Micropigmentación de Cejas</option>
+              <option>Curso de Remoción de Verrugas</option>
+              <option>Curso de Reconstrucción de Areola/Pezón</option>
+              <option>Mentoría Personalizada en Vivo</option>
+              <option>Servicio Clínico en Cabina</option>
+              <option>Módulo Emprendimiento La Guaira</option>
+            </select>
+          </div>
+          <div className="form-group">
+            <label htmlFor="c-message">Mensaje</label>
+            <textarea id="c-message" name="message" rows={4} value={form.message} onChange={change} placeholder="¿En qué podemos ayudarte?" />
+          </div>
+          <button type="submit" className="btn-primary btn-full">Enviar Mensaje</button>
+        </motion.form>
+      ) : (
+        <motion.div key="thanks" className="contact__thanks"
+          initial={{ opacity: 0, scale: 0.9 }} animate={{ opacity: 1, scale: 1 }}>
+          <div className="contact__thanks-icon">✓</div>
+          <h3>¡Mensaje enviado!</h3>
+          <p>Te respondemos dentro de las próximas 24 horas. También puedes escribirnos directamente por WhatsApp para atención inmediata.</p>
+          <a href={WA_LINK} target="_blank" rel="noopener noreferrer" className="btn-primary">
+            Ir a WhatsApp
+          </a>
+        </motion.div>
+      )}
+    </AnimatePresence>
   );
 }
 
@@ -639,22 +682,22 @@ function Footer() {
         <div className="footer__brand">
           <span className="footer__logo-main">LUMIÈRE</span>
           <span className="footer__logo-sub">AESTHETICS</span>
-          <p className="footer__tagline">Arte y ciencia al servicio de tu belleza.</p>
+          <p className="footer__tagline">Transformando vidas a través del arte y la estética profesional.</p>
         </div>
         <div className="footer__links">
           <div className="footer__col">
-            <h4>Servicios</h4>
+            <h4>Cursos</h4>
             <ul>
-              {['Toxina Botulínica', 'Rellenos Dérmicos', 'Bioestimuladores', 'Peelings', 'Hilos Tensores'].map((s) => (
-                <li key={s}><a href="#servicios">{s}</a></li>
+              {['Micropigmentación de Cejas','Remoción de Verrugas','Reconstrucción de Areola','Mentorías en Vivo','Masterclass Gratis'].map(s => (
+                <li key={s}><a href="#academia">{s}</a></li>
               ))}
             </ul>
           </div>
           <div className="footer__col">
-            <h4>Formación</h4>
+            <h4>Servicios</h4>
             <ul>
-              {['Programa Esencial', 'Especialización', 'Máster Integral', 'Talleres', 'Webinars'].map((s) => (
-                <li key={s}><a href="#formacion">{s}</a></li>
+              {['Diseño de Cejas','Micropigmentación Paramédica','Remoción de Verrugas','Limpieza Facial','Hidratación'].map(s => (
+                <li key={s}><a href="#servicios">{s}</a></li>
               ))}
             </ul>
           </div>
@@ -663,7 +706,7 @@ function Footer() {
             <ul>
               <li>hola@lumiereesthetics.com</li>
               <li>+57 300 000 0000</li>
-              <li>Bogotá · Medellín · Cali</li>
+              <li>La Guaira · Caracas · Online</li>
             </ul>
           </div>
         </div>
@@ -681,37 +724,35 @@ function Footer() {
 
 // ─── App Root ─────────────────────────────────────────────────────────────────
 export default function App() {
-  const [activeSection, setActiveSection] = useState('inicio');
+  const [active, setActive] = useState('inicio');
 
   useEffect(() => {
-    const onScroll = () => {
-      const ids = ['inicio', 'servicios', 'formacion', 'nosotros', 'contacto'];
+    const ids = ['inicio','academia','modalidades','servicios','la-guaira','contacto'];
+    const fn = () => {
       for (const id of ids) {
         const el = document.getElementById(id);
         if (el) {
           const { top, bottom } = el.getBoundingClientRect();
-          if (top <= 120 && bottom >= 120) {
-            setActiveSection(id);
-            break;
-          }
+          if (top <= 120 && bottom >= 120) { setActive(id); break; }
         }
       }
     };
-    window.addEventListener('scroll', onScroll, { passive: true });
-    return () => window.removeEventListener('scroll', onScroll);
+    window.addEventListener('scroll', fn, { passive: true });
+    return () => window.removeEventListener('scroll', fn);
   }, []);
 
   return (
     <div className="app">
-      <Navbar activeSection={activeSection} />
+      <WhatsAppFAB />
+      <Navbar active={active} />
       <main>
         <Hero />
-        <StatsStrip />
-        <Services />
-        <Training />
-        <About />
-        <Testimonials />
-        <Gallery />
+        <Academia />
+        <Modalidades />
+        <LeadMagnet />
+        <Servicios />
+        <LaGuaira />
+        <Certificaciones />
         <Contact />
       </main>
       <Footer />
