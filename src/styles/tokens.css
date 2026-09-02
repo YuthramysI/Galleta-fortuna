@@ -1,0 +1,35 @@
+:root {
+  /* Superficies: negro-azulado cósmico, la identidad del sitio desde el origen. */
+  --ink-950: #08070d;
+  --ink-900: #0a0911;
+  --ink-800: #17102b;
+
+  /* Velo de profundidad: aura violeta, no bruma terrosa. */
+  --veil: rgba(138, 43, 226, 0.28);
+  --veil-soft: rgba(138, 43, 226, 0.12);
+
+  /* Acento: dorado místico clásico. */
+  --brass: #e4d6a7;
+  --brass-soft: rgba(228, 214, 167, 0.55);
+  --brass-light: #fff8e2;
+
+  /* Texto sobre tinta cósmica. */
+  --ivory: #f6f1e6;
+  --parchment: #f2ecdd;
+  --stone: rgba(232, 228, 220, 0.68);
+  --stone-faint: rgba(232, 228, 220, 0.42);
+  --stone-ghost: rgba(232, 228, 220, 0.2);
+  --hairline: rgba(228, 214, 167, 0.18);
+
+  /* Tipografía: serif místico para títulos, sans limpio para lectura. */
+  --font-display: "Fraunces", "Iowan Old Style", Georgia, serif;
+  --font-body: "Manrope", "Segoe UI", system-ui, sans-serif;
+
+  /* Curvas de movimiento orgánicas (sin rebotes artificiales). */
+  --ease-organic: cubic-bezier(0.16, 1, 0.3, 1);
+  --ease-soft: cubic-bezier(0.22, 0.61, 0.36, 1);
+
+  /* Retícula. */
+  --measure: 1200px;
+  --gutter: clamp(20px, 5vw, 64px);
+}

@@ -1,0 +1,50 @@
+.grid {
+  position: relative;
+  z-index: 2;
+  max-width: var(--measure);
+  margin: 0 auto;
+  padding: 60px var(--gutter) 140px;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 80px;
+  align-items: center;
+}
+
+.kicker {
+  margin: 0 0 18px;
+  font-size: 12px;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--brass-soft);
+}
+
+.heading {
+  margin: 0;
+  font-family: var(--font-display);
+  font-weight: 300;
+  font-style: italic;
+  font-size: clamp(36px, 5vw, 56px);
+  line-height: 1.06;
+  color: var(--ivory);
+}
+
+.copy {
+  margin: 26px 0 0;
+  max-width: 42ch;
+  font-size: 17px;
+  line-height: 1.75;
+  color: var(--stone);
+  text-wrap: pretty;
+}
+
+.visual {
+  display: flex;
+  justify-content: center;
+}
+
+@media (max-width: 900px) {
+  .grid {
+    grid-template-columns: 1fr;
+    gap: 40px;
+  }
+}

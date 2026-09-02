@@ -1,0 +1,99 @@
+.ritual {
+  composes: grid from "./shared.module.css";
+}
+.kicker {
+  composes: kicker from "./shared.module.css";
+}
+.heading {
+  composes: heading from "./shared.module.css";
+}
+.copy {
+  composes: copy from "./shared.module.css";
+}
+.visual {
+  composes: visual from "./shared.module.css";
+}
+
+.orb {
+  position: relative;
+  width: 360px;
+  height: 360px;
+  max-width: 80vw;
+  max-height: 80vw;
+  border: none;
+  padding: 0;
+  background: none;
+  cursor: pointer;
+  transition: transform 0.5s var(--ease-organic);
+  will-change: transform;
+}
+
+.orbAura {
+  position: absolute;
+  inset: -8%;
+  border-radius: 50%;
+  background: radial-gradient(circle, var(--veil), transparent 68%);
+  filter: blur(28px);
+  animation: breathe 8s ease-in-out infinite;
+}
+
+.orbCanvas {
+  position: absolute;
+  inset: 0;
+  display: block;
+  border-radius: 50%;
+  overflow: hidden;
+  box-shadow: 0 0 0 1px var(--hairline), 0 30px 60px rgba(0, 0, 0, 0.5);
+}
+
+.orbCanvas :global(canvas) {
+  width: 100% !important;
+  height: 100% !important;
+  background: transparent !important;
+}
+
+.orbLabel {
+  position: absolute;
+  left: 50%;
+  bottom: -34px;
+  transform: translateX(-50%);
+  font-size: 11px;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--stone-faint);
+  white-space: nowrap;
+}
+
+@keyframes breathe {
+  0%, 100% { transform: scale(1); opacity: 0.55; }
+  50% { transform: scale(1.05); opacity: 0.85; }
+}
+
+@keyframes pulse {
+  0% { transform: scale(1); }
+  50% { transform: scale(0.96); }
+  100% { transform: scale(1); }
+}
+
+.orbPulsing {
+  animation: pulse 0.9s ease;
+}
+
+.orbFallback {
+  width: 360px;
+  height: 360px;
+  max-width: 80vw;
+  max-height: 80vw;
+  border-radius: 50%;
+  background: radial-gradient(circle at 40% 30%, var(--ink-800), var(--ink-950));
+  box-shadow: 0 0 0 1px var(--hairline);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .orbAura {
+    animation: none;
+  }
+  .orbPulsing {
+    animation: none;
+  }
+}

@@ -1,0 +1,59 @@
+.background {
+  position: fixed;
+  inset: 0;
+  z-index: 0;
+  pointer-events: none;
+  overflow: hidden;
+  background: var(--ink-900);
+}
+
+.sphere {
+  position: absolute;
+  border-radius: 50%;
+  filter: blur(40px);
+  animation: float 15s infinite linear;
+  opacity: 0.3;
+}
+
+@keyframes float {
+  0%, 100% { transform: translateY(0) rotate(0deg); }
+  50% { transform: translateY(-100px) rotate(180deg); }
+}
+
+.star {
+  position: absolute;
+  background: rgba(255, 255, 255, 0.8);
+  border-radius: 50%;
+  animation: twinkle 3s infinite;
+}
+
+@keyframes twinkle {
+  0%, 100% { opacity: 0.3; transform: scale(0.5); }
+  50% { opacity: 1; transform: scale(1.2); }
+}
+
+.symbol {
+  position: absolute;
+  opacity: 0.15;
+  font-family: "Times New Roman", serif;
+  color: var(--brass);
+  animation: symbol-float 20s infinite linear;
+  user-select: none;
+}
+
+@keyframes symbol-float {
+  0% { transform: translateY(110vh) rotate(0deg); }
+  100% { transform: translateY(-10vh) rotate(360deg); }
+}
+
+.glow {
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(circle at 50% 50%, rgba(255, 255, 255, 0.03) 0%, transparent 60%);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .sphere, .star, .symbol {
+    animation: none;
+  }
+}

@@ -1,0 +1,60 @@
+.ritual {
+  composes: grid from "./shared.module.css";
+}
+.kicker {
+  composes: kicker from "./shared.module.css";
+}
+.heading {
+  composes: heading from "./shared.module.css";
+}
+.copy {
+  composes: copy from "./shared.module.css";
+}
+.visual {
+  composes: visual from "./shared.module.css";
+}
+
+.frame {
+  position: relative;
+  width: 320px;
+  height: 320px;
+  max-width: 78vw;
+  max-height: 78vw;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: 1px solid var(--hairline);
+  background: none;
+  padding: 0;
+  cursor: pointer;
+  transition: transform 0.5s var(--ease-organic), border-color 0.4s ease;
+  will-change: transform;
+}
+
+.frame:hover {
+  border-color: var(--brass-soft);
+}
+
+.glow {
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(circle at 50% 55%, var(--veil-soft), transparent 68%);
+}
+
+.image {
+  position: relative;
+  width: 200px;
+  max-width: 58%;
+  height: auto;
+  filter: drop-shadow(0 20px 34px rgba(0, 0, 0, 0.55));
+}
+
+.label {
+  position: absolute;
+  left: 16px;
+  bottom: 14px;
+  font-size: 11px;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--stone-faint);
+}

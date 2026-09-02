@@ -1,0 +1,73 @@
+.footer {
+  position: relative;
+  z-index: 2;
+  border-top: 1px solid var(--hairline);
+}
+
+.row {
+  max-width: var(--measure);
+  margin: 0 auto;
+  padding: 40px var(--gutter) 0;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 32px;
+  font-size: 12px;
+  letter-spacing: 0.06em;
+  color: var(--stone-faint);
+}
+
+.glyphs {
+  color: var(--brass-soft);
+}
+
+.meta {
+  font-style: italic;
+  font-family: var(--font-display);
+}
+
+.note {
+  max-width: var(--measure);
+  margin: 0 auto;
+  padding: 16px var(--gutter) 40px;
+  position: relative;
+  z-index: 2;
+}
+
+.toggle {
+  padding: 0;
+  background: none;
+  border: none;
+  border-bottom: 1px solid var(--hairline);
+  font-size: 12px;
+  letter-spacing: 0.05em;
+  color: var(--brass);
+  cursor: pointer;
+}
+
+.toggle:hover {
+  color: var(--brass-light);
+  border-color: var(--brass-light);
+}
+
+.noteText {
+  margin: 16px 0 0;
+  max-width: 60ch;
+  font-size: 15px;
+  line-height: 1.65;
+  color: var(--stone-faint);
+  text-wrap: pretty;
+}
+
+.noteText code {
+  font-family: var(--font-display);
+  font-size: 0.9em;
+  color: var(--brass-soft);
+}
+
+@media (max-width: 640px) {
+  .row {
+    flex-wrap: wrap;
+    gap: 12px;
+  }
+}
