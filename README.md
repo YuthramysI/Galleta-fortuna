@@ -2,6 +2,8 @@
 
 **Portal Místico** es un portafolio esotérico de una sola página: un blog místico, una bola de la fortuna animada y una galleta de la fortuna, cada una con mensajes aleatorios del universo — incluyendo presagios "legendarios" que aparecen con muy poca probabilidad.
 
+**🔮 [Ver el sitio en vivo](https://galleta-fortuna-rq4a.vercel.app/)**
+
 ![Hero de Portal Místico](docs/screenshots/hero.png)
 
 ## Demo visual

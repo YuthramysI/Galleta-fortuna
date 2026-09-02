@@ -8,10 +8,10 @@ function MessageReveal({ message, legendary, copied, onCopy, secondaryLabel, onS
   return (
     <motion.div
       className={`${styles.card}${legendary ? ` ${styles.legendary}` : ""}`}
-      initial={{ opacity: 0, y: 18, filter: "blur(8px)" }}
-      animate={{ opacity: 1, y: 0, filter: "blur(0px)" }}
-      exit={{ opacity: 0, y: -10, filter: "blur(8px)" }}
-      transition={{ duration: 0.6, ease: [0.16, 1, 0.3, 1] }}
+      initial={{ opacity: 0, y: 14 }}
+      animate={{ opacity: 1, y: 0 }}
+      exit={{ opacity: 0, y: -8 }}
+      transition={{ duration: 0.4, ease: [0.16, 1, 0.3, 1] }}
     >
       {legendary && (
         <p className={styles.legendaryKicker}>✦ Presagio legendario ✦</p>
@@ -21,10 +21,10 @@ function MessageReveal({ message, legendary, copied, onCopy, secondaryLabel, onS
           <motion.p
             key={message}
             className={styles.text}
-            initial={{ opacity: 0, filter: "blur(4px)" }}
-            animate={{ opacity: 1, filter: "blur(0px)" }}
-            exit={{ opacity: 0, filter: "blur(4px)" }}
-            transition={{ duration: 0.4 }}
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            transition={{ duration: 0.3 }}
           >
             {message}
           </motion.p>

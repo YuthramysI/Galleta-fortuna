@@ -1,4 +1,4 @@
-import { lazy, Suspense, useState } from "react";
+import { lazy, Suspense, useEffect, useState } from "react";
 import { AnimatePresence } from "framer-motion";
 import Reveal from "../Reveal/Reveal";
 import { useInView } from "../../hooks/useInView";
@@ -7,9 +7,30 @@ import styles from "./FortuneBallRitual.module.css";
 
 const RiveOrb = lazy(() => import("./RiveOrb"));
 
+// En tiempo de inactividad (no compite con el render inicial), adelanta la
+// descarga del chunk de RiveOrb y del propio archivo .riv. Para cuando el
+// usuario realmente llega a la sección (tras el hero y el blog), ya está
+// todo en caché y el montaje es instantáneo en vez de sentirse lento.
+function prefetchRiveAssets() {
+  import("./RiveOrb");
+  const link = document.createElement("link");
+  link.rel = "preload";
+  link.as = "fetch";
+  link.href = "/fortuna-ah.riv";
+  link.crossOrigin = "anonymous";
+  document.head.appendChild(link);
+}
+
 function FortuneBallRitual({ ball, ballLegendary, ballOpen, copied, onSpin, onClose, onCopy }) {
-  const [sectionRef, inView] = useInView({ rootMargin: "300px" });
+  const [sectionRef, inView] = useInView({ rootMargin: "600px" });
   const [pulsing, setPulsing] = useState(false);
+
+  useEffect(() => {
+    const idle = window.requestIdleCallback ?? ((cb) => window.setTimeout(cb, 200));
+    const cancelIdle = window.cancelIdleCallback ?? window.clearTimeout;
+    const id = idle(prefetchRiveAssets);
+    return () => cancelIdle(id);
+  }, []);
 
   const handleSpin = () => {
     onSpin();

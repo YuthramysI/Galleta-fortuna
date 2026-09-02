@@ -25,15 +25,10 @@ function App() {
 
   useEffect(() => () => clearTimeout(copyTimeoutRef.current), []);
 
-  useEffect(() => {
-    // Autoplay silenciado: los navegadores lo permiten sin gesto del usuario.
-    audioRef.current?.play().catch(() => {});
-  }, []);
-
-  // El toggle real de sonido vive en el propio handler de clic (no en un
-  // efecto) para que el .play() ocurra dentro del gesto del usuario — si el
-  // autoplay muteado inicial nunca llegó a reproducir de verdad, esto lo
-  // recupera; si ya estaba sonando, es un no-op inofensivo.
+  // El audio (776KB) no se precarga ni se reproduce hasta que el usuario
+  // pide sonido explícitamente: con preload="none" en el <audio>, nada de
+  // ese peso compite con la carga inicial del sitio. El .play() ocurre aquí
+  // mismo, dentro del gesto de clic, para que el navegador lo permita.
   const toggleAudio = () => {
     setMuted((current) => {
       const next = !current;
@@ -101,7 +96,7 @@ function App() {
         />
       </main>
       <SiteFooter />
-      <audio ref={audioRef} loop muted style={{ display: "none" }}>
+      <audio ref={audioRef} loop muted preload="none" style={{ display: "none" }}>
         <source src="/sonido-space.mp3" type="audio/mpeg" />
       </audio>
     </>
